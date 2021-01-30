@@ -57,7 +57,7 @@ client.on('message', async (message: Message) => {
     };
 
     message.channel.send({ embed: commitsEmbed });
-  };
+  }
 });
 
 client.login(process.env.DISCORD_TOKEN);
