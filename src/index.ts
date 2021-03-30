@@ -1,6 +1,7 @@
 /* eslint-disable prefer-const */
 import Discord, { Message } from 'discord.js';
 import R from 'ramda';
+import wikipediaSearch, { SearchQuery } from './functions/wikipedia-search';
 
 interface Club {
   name: string;
@@ -19,7 +20,7 @@ let clubs: Club[] = [
   {
     name: 'mission-control',
     members: [],
-  }
+  },
 ];
 
 let rollcalls: Rollcall[] = [];
@@ -126,9 +127,9 @@ client.on('message', async (message: Message) => {
       }
 
       let messageListString = `**Members for ${args[1]}**`;
-      
+
       R.forEach((member: Discord.User) => {
-        messageListString += `\n${member}`
+        messageListString += `\n${member}`;
       }, club.members);
 
       message.channel.send(messageListString);
@@ -195,6 +196,27 @@ client.on('message', async (message: Message) => {
 
       message.channel.send(messageStringToSent);
     }
+  }
+
+  if (command === 'w') {
+    const results: SearchQuery = await wikipediaSearch(args);
+
+    if (results.query.search.length < 1) {
+      message.channel.send(`That query didn't find a match ${message.author}!`);
+      return;
+    }
+
+    const searchEmbed = new Discord.MessageEmbed()
+      .setColor('#0099ff')
+      .setTitle(`Wikipedia search results for '${args.join(' ')}'`)
+      .addFields(
+        { name: 'Snippet', value: results.query.search[0].snippet },
+        { name: '\u200B', value: '\u200B' },
+      )
+      .setTimestamp()
+      .setFooter("Emir's little bot");
+
+    message.channel.send(searchEmbed);
   }
 });
 
