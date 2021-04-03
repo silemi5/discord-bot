@@ -40,24 +40,24 @@ client.on('messageReactionAdd', (messageReaction, user) => {
 
   if (messageReaction.message.content.startsWith('[🚀]')) {
     const club: any = R.find(R.propEq('name', clubToFind))(clubs);
-  
+
     // Club doesn't exist
     if (!club) return;
 
     // User already a member
-    if(R.includes(user, club.members)) return;
-  
+    if (R.includes(user, club.members)) return;
+
     const clubIndex = R.findIndex(R.propEq('name', clubToFind))(clubs);
     clubs[clubIndex].members.push(user);
   }
 
   if (messageReaction.message.content.startsWith('[✔️]')) {
     const club: any = R.find(R.propEq('club', clubToFind))(rollcalls);
-  
+
     // Club doesn't exist
     if (!club) return;
 
-    if(R.includes(user, club.present)) return;
+    if (R.includes(user, club.present)) return;
 
     const clubIndex = R.findIndex(R.propEq('club', clubToFind))(rollcalls);
     rollcalls[clubIndex].present.push(user);
@@ -72,7 +72,7 @@ client.on('message', async (message: Message) => {
   const command = args.shift()?.toLowerCase();
 
   if (command === 'join') {
-    if(!args[0]) {
+    if (!args[0]) {
       message.channel.send(`${message.author}, please indicate what club do you want to join.`);
       return;
     }
@@ -86,7 +86,7 @@ client.on('message', async (message: Message) => {
     }
 
     // User already a member
-    if(R.includes(message.author, club.members)) {
+    if (R.includes(message.author, club.members)) {
       message.channel.send(`${message.author}, you already joined ${args[0]}!`);
       return;
     }
@@ -98,7 +98,7 @@ client.on('message', async (message: Message) => {
   }
 
   if (command === 'react') {
-    if(!args[0]) {
+    if (!args[0]) {
       message.channel.send(`${message.author}, please indicate what club do you want to list.`);
       message.delete();
       return;
