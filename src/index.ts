@@ -1,7 +1,10 @@
+/* eslint-disable prefer-arrow-callback */
 /* eslint-disable prefer-const */
 import Discord, { Message } from 'discord.js';
 import R from 'ramda';
+import schedule from 'node-schedule';
 import wikipediaSearch, { SearchQuery } from './functions/wikipedia-search';
+import chrono from './functions/chrono';
 
 interface Club {
   name: string;
@@ -217,6 +220,14 @@ client.on('message', async (message: Message) => {
       .setFooter("Emir's little bot");
 
     message.channel.send(searchEmbed);
+  }
+
+  if (command === 'remind') {
+    const parsedArgs = chrono(args);
+    message.reply(`will remind you about \`${parsedArgs.reminder}\`.`);
+    schedule.scheduleJob(parsedArgs.parseDate, function () {
+      message.author.send(`Reminding you to do ${parsedArgs.reminder}!`);
+    });
   }
 });
 
