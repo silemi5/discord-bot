@@ -6,6 +6,7 @@ import schedule from 'node-schedule';
 import wikipediaSearch, { SearchQuery } from './functions/wikipedia-search';
 import instantAnswer from './functions/duckduckgo-instant-answer';
 import chrono from './functions/chrono';
+import help from './functions/help';
 
 interface Club {
   name: string;
@@ -234,7 +235,7 @@ client.on('message', async (message: Message) => {
   if (command === 'q') {
     const results = await instantAnswer(args);
 
-    const searchEmbed = new Discord.MessageEmbed()
+    const queryEmbed = new Discord.MessageEmbed()
       .setColor('#0099ff')
       .setTitle(`${results.Heading}`)
       .setURL(results.Redirect)
@@ -245,7 +246,36 @@ client.on('message', async (message: Message) => {
       .setTimestamp()
       .setFooter('Results from DuckDuckGo');
 
-    message.channel.send(searchEmbed);
+    message.channel.send(queryEmbed);
+  }
+
+  if (command === 'help') {
+    const commands = help();
+
+    const reply = 'Here is the possible commands:';
+    let fields: { name: string; value: string }[] = [];
+    R.forEach((cmd) => {
+      fields.push({
+        name: cmd.command,
+        value: cmd.description,
+      });
+      fields.push({
+        name: 'Example:',
+        value: Array.isArray(cmd.example) ? cmd.example.join('\n') : cmd.example,
+      });
+      fields.push({ name: '\u200B', value: '\u200B' });
+    }, commands);
+
+    const queryEmbed = {
+      color: 0x0099ff,
+      title: 'Possible commands',
+      fields,
+    };
+
+    await Promise.all([
+      message.channel.send(reply),
+      message.channel.send({ embed: queryEmbed }),
+    ]);
   }
 });
 
