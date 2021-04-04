@@ -4,6 +4,7 @@ import Discord, { Message } from 'discord.js';
 import R from 'ramda';
 import schedule from 'node-schedule';
 import wikipediaSearch, { SearchQuery } from './functions/wikipedia-search';
+import instantAnswer from './functions/duckduckgo-instant-answer';
 import chrono from './functions/chrono';
 
 interface Club {
@@ -213,7 +214,7 @@ client.on('message', async (message: Message) => {
       .setColor('#0099ff')
       .setTitle(`Wikipedia search results for '${args.join(' ')}'`)
       .addFields(
-        { name: 'Snippet', value: results.query.search[0].snippet },
+        { name: 'Snippet', value: results.query.search[0].snippet.replace(/<[^>]+>/g, '') },
         { name: '\u200B', value: '\u200B' },
       )
       .setTimestamp()
@@ -228,6 +229,23 @@ client.on('message', async (message: Message) => {
     schedule.scheduleJob(parsedArgs.parseDate, function () {
       message.author.send(`Reminding you to do ${parsedArgs.reminder}!`);
     });
+  }
+
+  if (command === 'q') {
+    const results = await instantAnswer(args);
+
+    const searchEmbed = new Discord.MessageEmbed()
+      .setColor('#0099ff')
+      .setTitle(`${results.Heading}`)
+      .setURL(results.Redirect)
+      .addFields(
+        { name: 'Snippet', value: results.AbstractText ?? results.RelatedTopics[0].Text },
+        { name: '\u200B', value: '\u200B' },
+      )
+      .setTimestamp()
+      .setFooter('Results from DuckDuckGo');
+
+    message.channel.send(searchEmbed);
   }
 });
 
