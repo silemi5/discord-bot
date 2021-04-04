@@ -2,22 +2,20 @@
 import fetch from 'node-fetch';
 import R from 'ramda';
 
-type Search = {
-  ns: number;
-  title: string;
-  pageid: number;
-  size: number;
-  wordcount: number;
-  snippet: string;
-  timestamp: Date;
-}
-
 export type SearchQuery = {
   query: {
     searchInfo: {
       totalHits: number;
     },
-    search: Search[];
+    search: {
+      ns: number;
+      title: string;
+      pageid: number;
+      size: number;
+      wordcount: number;
+      snippet: string;
+      timestamp: Date;
+    }[];
   }
 }
 

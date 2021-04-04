@@ -5,6 +5,11 @@ export default function () {
     example: string | string[];
   }[] = [
     {
+      command: 'help',
+      description: 'Prints out the help command',
+      example: 'help',
+    },
+    {
       command: 'w',
       description: 'Wikipedia query',
       example: 'w Discord',
