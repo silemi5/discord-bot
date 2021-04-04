@@ -23,9 +23,7 @@ export default function () {
       command: 'q',
       description: 'Provides instant answers about the query provided.',
       example: [
-        'q What is 1 + 1?',
-        'q What happened at the battle of the bulge?',
-        'q Where is Numazu?',
+        'q Zamboanga City',
       ],
     },
   ];

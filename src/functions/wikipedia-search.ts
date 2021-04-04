@@ -22,7 +22,7 @@ export type SearchQuery = {
 }
 
 export default async function (args: string[], lang?: string) {
-  const query = args.join('+');
+  const query = args.join(' ').replace('+', '%2B').replace(' ', '+');
 
   let url = `https://${lang || 'en'}.wikipedia.org/w/api.php`;
 

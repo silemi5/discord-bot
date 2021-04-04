@@ -235,12 +235,17 @@ client.on('message', async (message: Message) => {
   if (command === 'q') {
     const results = await instantAnswer(args);
 
+    if (results.AbstractText === '' && results.RelatedTopics.length === 0) {
+      message.channel.send('Sorry, it seems that the query you have entered does not have any results.');
+      return;
+    }
+
     const queryEmbed = new Discord.MessageEmbed()
       .setColor('#0099ff')
       .setTitle(`${results.Heading}`)
-      .setURL(results.Redirect)
+      .setURL(results.AbstractURL ?? results.Redirect)
       .addFields(
-        { name: 'Snippet', value: results.AbstractText ?? results.RelatedTopics[0].Text },
+        { name: 'Snippet', value: (results.AbstractText === '') ? results.RelatedTopics[0].Text : results.AbstractText },
         { name: '\u200B', value: '\u200B' },
       )
       .setTimestamp()

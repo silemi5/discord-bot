@@ -7,7 +7,7 @@ export default async function (args: string[]): Promise<{
   AbstractURL: string;
   Image: string;
   Heading: string;
-  Answer: string;
+  Answer: string | number;
   AnswerType: string;
   RelatedTopics: {
     Result: string;
@@ -22,7 +22,7 @@ export default async function (args: string[]): Promise<{
   Type: string;
   Redirect: string;
 }> {
-  const query = args.join('+');
+  const query = args.join(' ').replace('+', '%2B').replace(' ', '+');
 
   const url = `https://api.duckduckgo.com/?q=${query}&format=json&t=discord-bot&no_html=1&pretty=1`;
 
