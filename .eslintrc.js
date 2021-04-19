@@ -16,5 +16,8 @@ module.exports = {
   ],
   rules: {
     'no-console': 'off',
+    'func-names': 'off',
+    'import/extensions': 'off',
+    'import/no-unresolved': 'off',
   },
 };
